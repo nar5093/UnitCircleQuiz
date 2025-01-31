@@ -227,10 +227,15 @@ function checkAnswers() {
             // Close the popup without resetting the unit circle
             document.getElementById('popup').style.display = 'none';
         }
+
+	function closePopup() {
+    		document.body.innerHTML = "<h2>Quiz Submitted</h2><p>You may now exit.</p>";
+	}
+
     </script>
 </head>
 <body>
-    <h2>Unit Circle Quiz</h2>
+    <h2>Unit Circle Quiz.</h2>
     <p>Fill in the degrees, radians, and coordinates for each angle:</p>
     <div class="container">
         <img src="UnitCircle.png" alt="Unit Circle" class="unit-circle">
