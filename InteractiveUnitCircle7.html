@@ -184,7 +184,19 @@ function checkAnswers() {
         Overall Score: ${overallScore}%
     `;
     
+	function sendScoreToCanvas(score) {
+    if (window.parent !== window) {
+        window.parent.postMessage({
+            subject: "lti.frameResize",
+            score: score / 100 // Convert % to decimal (Canvas expects 0-1)
+        }, "*");
+    }
+}
+
+	
     document.getElementById('popup').style.display = 'block';
+	sendScoreToCanvas(overallScore);
+
 }
 
 
