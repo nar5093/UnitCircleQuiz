@@ -174,15 +174,26 @@ function checkAnswers() {
         }
     });
 
-    let degreeScore = ((correctTotal / totalDegrees) * 100).toFixed(0);
-    let degRadScore = ((correctTotal / totalDegRad) * 100).toFixed(0);
-    let overallScore = ((correctTotal / totalTotal) * 100).toFixed(0);
+    // let degreeScore = ((correctTotal / totalDegrees) * 100).toFixed(0);
+    // let degRadScore = ((correctTotal / totalDegRad) * 100).toFixed(0);
+    // let overallScore = ((correctTotal / totalTotal) * 100).toFixed(0);
+	
+	let degreeScore = `${correctDegrees} / ${totalDegrees}`;
+	let degRadScore = `${correctDegRad} / ${totalDegRad}`;
+	let overallScore = `${correctTotal} / ${totalTotal}`;
 
-    document.getElementById('popup-score').innerHTML = `
-        Degree Score: ${degreeScore}%<br>
-        Degree + Radian Score: ${degRadScore}%<br>
-        Overall Score: ${overallScore}%
-    `;
+    //document.getElementById('popup-score').innerHTML = `
+        //Degree Score: ${degreeScore}%<br>
+        //Degree + Radian Score: ${degRadScore}%<br>
+        //Overall Score: ${overallScore}%
+    //`;
+	
+	document.getElementById('popup-score').innerHTML = `
+		Degree Score: ${degreeScore}<br>
+		Degree + Radian Score: ${degRadScore}<br>
+		Overall Score: ${overallScore}
+	`;
+
     
 	function sendScoreToCanvas(score) {
     if (window.parent !== window) {
