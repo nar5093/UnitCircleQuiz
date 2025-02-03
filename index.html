@@ -5,7 +5,18 @@
     <meta name="viewport" content="width=device-width, initial="1.0">
     <title>Interactive Unit Circle</title>
     <style>
-        .container {
+        
+		#header {
+    position: sticky;
+    top: 0;
+    background-color: white; /* Adjust as needed */
+    /*z-index: 1000; Ensures it stays above other elements */
+    padding: 10px;
+   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); Optional: Adds a subtle shadow */
+}
+
+		
+		.container {
             position: relative;
             width: 600px;
             height: 600px;
@@ -97,28 +108,64 @@
         .hidden {
             display: none;
         }
+		
+		#timer-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+}
+
+#timer-display {
+    font-size: 20px;
+	background-color: #ff4d4d;
+    color: white;
+    font-weight: bold;
+	border-radius: 5px;
+	padding: 10px;
+}
+
+.timer-btn {
+    margin-top: 5px;
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.timer-btn:hover {
+    background-color: #0056b3;
+}
+
 
     </style>
     <script>
                 let focusedInput = null; // Variable to store the focused input
 
         // Function to insert square root in the active input field
-        function insertSquareRoot() {
-            if (focusedInput) {
-                const cursorPos = focusedInput.selectionStart; // Get current cursor position
-                const currentValue = focusedInput.value;
-                focusedInput.value = currentValue.slice(0, cursorPos) + '√' + currentValue.slice(cursorPos); // Insert √ at the cursor position
+function insertSquareRoot() {
+    if (focusedInput) {
+        const cursorPos = focusedInput.selectionStart; // Get current cursor position
+        const currentValue = focusedInput.value;
+        focusedInput.value = currentValue.slice(0, cursorPos) + '√' + currentValue.slice(cursorPos); // Insert √ at the cursor position
 
-                // Restore cursor position after inserting square root symbol
-                focusedInput.setSelectionRange(cursorPos + 1, cursorPos + 1);
-                focusedInput.focus(); // Ensure the input field remains focused
+        // Restore cursor position after inserting square root symbol
+        focusedInput.setSelectionRange(cursorPos + 1, cursorPos + 1);
+        focusedInput.focus(); // Ensure the input field remains focused
 
-                // Prevent backtracking by ensuring the cursor remains where expected in the coordinate fields
-                if (focusedInput.id.includes('-2') || focusedInput.id.includes('-3')) {
-                    setTimeout(() => focusedInput.setSelectionRange(cursorPos + 1, cursorPos + 1), 0); // Slight delay to ensure cursor behavior
-                }
-            }
+        // Prevent backtracking by ensuring the cursor remains where expected in the coordinate fields
+        if (focusedInput.id.includes('-2') || focusedInput.id.includes('-3')) {
+            setTimeout(() => focusedInput.setSelectionRange(cursorPos + 1, cursorPos + 1), 0); // Slight delay to ensure cursor behavior
         }
+
+        // **Start the timer if it hasn't started yet**
+        startTimer();
+    }
+}
+
 
         // Function to set the focused input field
         function setFocus(inputField) {
@@ -126,8 +173,47 @@
             // Delay focus update to allow proper cursor handling
             setTimeout(() => inputField.focus(), 0);
         }
+		
+		let timer;
+        let timeLeft = 300; // 5 minutes
+        let timerRunning = false;
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timer = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        document.getElementById('timer-display').textContent = `Time Left: ${formatTime(timeLeft)}`;
+                    } else {
+                        clearInterval(timer);
+                        checkAnswers();
+                    }
+                }, 1000);
+            }
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function checkAnswers() {
+            clearInterval(timer);
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.input-field').forEach(input => {
+                input.addEventListener('input', startTimer);
+            });
+        });
 
 function checkAnswers() {
+
+	clearInterval(timer); // Stop the timer when "Check Answers" is clicked
+
     const answers = {
         '0': ['0', '0', '1', '0'],
         '30': ['30', '1/6', '√3/2', '1/2'],
@@ -227,16 +313,19 @@ function checkAnswers() {
             // Close the popup without resetting the unit circle
             document.getElementById('popup').style.display = 'none';
         }
-
-	function closePopup() {
-    		document.body.innerHTML = "<h2>Quiz Submitted</h2><p>You may now close this tab.</p>";
-	}
-
     </script>
 </head>
 <body>
-    <h2>Unit Circle Quiz.</h2>
-    <p>Fill in the degrees, radians, and coordinates for each angle:</p>
+    <div id="header">
+    <h1>Unit Circle Quiz</h1>
+    <p>Instructions: Fill in the degrees, radians, and coordinate for each angle.</p>
+</div>
+
+	   <div id="timer-container">
+    <div id="timer-display">Time Left: 5:00</div>
+    <button class="timer-btn" onclick="startTimer()">Start Timer</button>
+</div>
+
     <div class="container">
         <img src="UnitCircle.png" alt="Unit Circle" class="unit-circle">
         
