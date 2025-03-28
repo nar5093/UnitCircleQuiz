@@ -175,7 +175,7 @@ function insertSquareRoot() {
         }
 		
 		let timer;
-        let timeLeft = 900; // 10 minutes
+        let timeLeft = 900; // 15 minutes
         let timerRunning = false;
 
         function startTimer() {
@@ -293,6 +293,11 @@ function checkAnswers() {
 	
     document.getElementById('popup').style.display = 'block';
 	sendScoreToCanvas(overallScore);
+	
+	// Disable all input fields after checking answers
+    document.querySelectorAll("input[type='text']").forEach(input => {
+        input.disabled = true;
+	});
 
 }
 
